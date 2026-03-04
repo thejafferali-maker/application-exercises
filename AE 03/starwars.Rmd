@@ -1,6 +1,6 @@
 ---
 title: "AE 03 - Visualizing Star Wars Characters"
-author: "Your Name"
+author: "Jaffer Ali"
 date: "`r Sys.Date()`"
 output: 
   html_document:
@@ -74,27 +74,26 @@ glimpse(starwars)
 
 **Answer the following questions:**
 
-**How many observations (rows) are there?** _____
+**How many observations (rows) are there?** 87
 
-**How many variables (columns) are there?** _____
+**How many variables (columns) are there?** 14
 
 **Name three numerical variables:**
 
-1. _____
-2. _____
-3. _____
+1. Height 
+2. Mass
+3. Birth year
 
 **Name three categorical variables:**
 
-1. _____
-2. _____
-3. _____
+1. hair_color 
+2.skin_color 
+3. eye_color
+
 
 **What does each observation represent?**
 
-___________________________________________________________________________
-
----
+Each observation represents one individual character,including their physical characteristics, demographic information, and related attributes.
 
 ## Exercise 2: Understanding Aesthetics
 
@@ -111,8 +110,7 @@ ggplot(starwars,
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
+The color mapping to gender was overridden, so all points appear the same color instead of being colored by gender. The plot now only shows the mapping for birth_year (size), and the gender color legend disappeared.
 
 **Task 2.2:** Why did this happen?
 
@@ -120,8 +118,7 @@ ___________________________________________________________________________
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
+This happened because the color aesthetic was overridden or removed in the plotting code. As a result, ggplot no longer mapped color to gender, and all points were displayed using a single color instead of different colors for each gender.
 
 **The issue:** When you set `color = "pink"` inside `geom_point()`, it overrides the aesthetic mapping `color = gender` from `aes()`.
 
@@ -149,10 +146,10 @@ ggplot(starwars,
        aes(x = height, y = mass, color = gender, size = birth_year)) +
   geom_point(color = "#30509C") +
   labs(
-    title = "___",           # Title about relationship between height and mass
-    x = "___",               # What is on the x-axis?
-    y = "___",               # What is on the y-axis?
-    size = "___"             # What does size represent?
+    title ="Mass vs Height of Star Wars Charchters",           # Title about relationship between height and mass
+    x = "Height(cm)",               # What is on the x-axis?
+    y = "Mass(kg)",               # What is on the y-axis?
+    size = "Birth Year"             # What does size represent?
   )
 ```
 
@@ -166,8 +163,7 @@ ggplot(starwars,
 
 **Your answer:**
 
-___________________________________________________________________________
-
+There is no color label because the color mapping to gender was overridden by setting a fixed color in geom_point(). Since color is no longer mapped to a variable, ggplot does not create a color legend, and therefore no color label is needed in labs().
 ---
 
 ## Exercise 4: Create a Histogram
@@ -186,14 +182,14 @@ starwars %>%
 ```
 
 **Now create your histogram:**
-```{r histogram, eval = FALSE}
+```{r histogram, eval = TRUE}
 # Fill in the blanks
-ggplot(starwars, aes(x = ___)) +
-  geom_histogram(binwidth = ___, fill = "steelblue", color = "white") +
+ggplot(starwars, aes(x = height)) +
+  geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
   labs(
-    title = "___",
-    x = "___",
-    y = "___"
+    title = "Distribuation of Star Wars Charchter Heights",
+    x = "Heights(cm)",
+    y = "Number of Charhcters"
   )
 ```
 
@@ -207,15 +203,13 @@ ggplot(starwars, aes(x = ___)) +
 
 **Your answer:**
 
-I chose a binwidth of _____ because ______________________________________
-___________________________________________________________________________
+I chose a binwidth of 10 because it creates bins that are wide enough to show the overall pattern of the data while still providing enough detail to understand the distribution of character heights.
 
 **Task 4.2:** Describe the distribution. Is it symmetric, skewed left, or skewed right? Are there any outliers?
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
+The distribution is slightly skewed right with a few tall outliers. Most characters cluster around the middle height range.
 
 ---
 
@@ -234,14 +228,14 @@ Pick a numerical variable and a categorical variable and make a visualization to
 - height by gender
 - mass by species
 - birth_year by sex
-```{r num-cat, eval = FALSE}
+```{r num-cat, eval = TRUE}
 # Your code here
-ggplot(starwars, aes(x = ___, y = ___)) +
+ggplot(starwars, aes(x = gender, y = height)) +
   geom_boxplot(fill = "lightblue") +
   labs(
-    title = "___",
-    x = "___",
-    y = "___"
+    title = "Height by Gender of Star Wars Characters",
+    x = "Gender",
+    y = "Height (cm)"
   )
 ```
 
@@ -249,9 +243,7 @@ ggplot(starwars, aes(x = ___, y = ___)) +
 
 What does this visualization tell you about the relationship between these two variables?
 
-___________________________________________________________________________
-___________________________________________________________________________
-___________________________________________________________________________
+This visualization shows how the heights of Star Wars characters vary by gender. The boxplot allows us to compare the distribution of heights for each gender category. Most of the characters identified as masculine appear to have a wider range of heights, while other gender categories have fewer observations and less variation. Overall, the plot suggests that height differs somewhat between gender groups, but the masculine category contains most of the data points in the dataset.
 
 ---
 
@@ -266,30 +258,30 @@ Pick a single categorical variable from the dataset and make a bar plot of its d
 - species
 - eye_color
 - hair_color
-```{r barplot,, eval = FALSE}
+```{r barplot,, eval = TRUE}
 # Your code here
-ggplot(starwars, aes(x = ___)) +
+ggplot(starwars, aes(x = gender)) +
   geom_bar(fill = "coral") +
   labs(
-    title = "___",
-    x = "___",
-    y = "___"
+    title = "Distribution of Star Wars Characters by Gender",
+    x = "Gender",
+    y = "Number of Characters"
   )
 ```
 
 **Task 6.1:** Which category has the most observations?
 
-**Your answer:** _____
+**Your answer:** Masculine 
 
 **Task 6.2:** If your plot has many categories with small bars that are hard to read, try flipping the coordinates:
-```{r barplot-flipped, eval = FALSE}
+```{r barplot-flipped, eval = TRUE}
 # Same code as above, but add coord_flip() at the end
-ggplot(starwars, aes(x = ___)) +
+ggplot(starwars, aes(x = gender)) +
   geom_bar(fill = "coral") +
   labs(
-    title = "___",
-    x = "___",
-    y = "___"
+    title = "Distribution of Star Wars Characters by Gender",
+    x = "Gender",
+    y = "Number of Characters"
   ) +
   coord_flip()
 ```
@@ -314,15 +306,15 @@ Pick two categorical variables and make a visualization to visualize the relatio
 - gender and hair_color
 
 **Option 1: Stacked bar plot**
-```{r cat-cat-stacked, eval = FALSE}
+```{r cat-cat-stacked, eval = TRUE}
 # Your code here
-ggplot(starwars, aes(x = ___, fill = ___)) +
+ggplot(starwars, aes(x = gender, fill = species)) +
   geom_bar() +
   labs(
-    title = "___",
-    x = "___",
+    title = "Species Distribution by Gender",
+    x = "Gender",
     y = "Count",
-    fill = "___"
+    fill = "Species"
   )
 ```
 
@@ -343,9 +335,7 @@ ggplot(starwars, aes(x = ___, fill = ___)) +
 
 What does this visualization tell you about the relationship between these two variables?
 
-___________________________________________________________________________
-___________________________________________________________________________
-___________________________________________________________________________
+This plot shows that most Star Wars characters are masculine, and they belong to many different species. The feminine group has fewer characters, and the NA group has very few.
 
 ---
 
@@ -371,18 +361,18 @@ Pick two numerical variables and two categorical variables and make a visualizat
 ```{r multi, eval=FALSE}
 # You might want to filter first to avoid too many facets
 starwars_filtered <- starwars %>%
-  filter(species %in% c("Human", "Droid", "___"))  # Pick 3-4 species
+  filter(species %in% c("Human", "Droid", "Wookiee"))  # Pick 3-4 species
 
 # Your plot here
 ggplot(starwars_filtered, 
-       aes(x = ___, y = ___, color = ___)) +
+       aes(x = height, y = mass, color = gender)) +
   geom_point(size = 3) +
-  facet_wrap(~ ___) +
+  facet_wrap(~ species) +
   labs(
-    title = "___",
-    x = "___",
-    y = "___",
-    color = "___"
+    title = "Height vs Mass of Star Wars Characters by Species",
+    x = "Height (cm)",
+    y = "Mass (kg)",
+    color = "Gender"
   )
 ```
 
@@ -390,10 +380,7 @@ ggplot(starwars_filtered,
 
 What patterns do you notice? How do the relationships differ across the facets?
 
-___________________________________________________________________________
-___________________________________________________________________________
-___________________________________________________________________________
-___________________________________________________________________________
+The plot shows that taller characters usually have higher mass. Humans have the most characters and a wider range of heights and masses. Wookiees are very tall and heavy, while droids have fewer characters with different sizes.
 
 ---
 
@@ -403,21 +390,19 @@ ___________________________________________________________________________
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
+The scatter plot with facets was the most useful because it shows the relationship between height and mass while also comparing different species and genders. This makes it easier to see patterns and differences between groups.
 
 **Task 9.2:** What was the most interesting pattern or relationship you found?
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
+The most interesting pattern was that Wookiees are much taller and heavier than most other characters, while humans show a wider range of heights and masses.
 
 **Task 9.3:** What did you find most challenging about creating these visualizations?
 
 **Your answer:**
 
-___________________________________________________________________________
+The most challenging part was choosing the right variables and plot types to clearly show the relationships in the data. Some variables also had many categories, which made the plots harder to read.
 
 ---
 
