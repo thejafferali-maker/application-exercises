@@ -1,16 +1,16 @@
 ---
 title: "AE 05 - Sales - Reading Excel Files"
-author: "Your Name"
+author: "Jaffer Ali"
 date: "`r Sys.Date()`"
 output: 
-  pdf_document:
-    toc: true
-    latex_engine: xelatex
-    keep_tex: false
   html_document:
     toc: true
     toc_float: true
     code_folding: show
+  pdf_document:
+    toc: true
+    latex_engine: xelatex
+    keep_tex: false
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
@@ -102,8 +102,9 @@ read_excel("data-raw/sales.xlsx")
 ```{r read-sales, eval = FALSE}
 # Fill in the blanks
 sales <- read_excel(
-  "___",           # File path
-  skip = ___       # Number of rows to skip (try 0, 1, 2, 3 and see what works)
+  "data-raw/sales.xlsx",
+  skip = 2,
+  col_names = c("brand", "n")
 )
 
 sales
@@ -117,7 +118,7 @@ sales
 
 **How many rows and columns does the sales data have?**
 
-**Your answer:** _____ rows and _____ columns
+**Your answer:** 8 rows and 2 columns
 
 ---
 
@@ -133,16 +134,16 @@ sales
 **Task 2.1:** What does each row represent?
 
 **Your answer:**
-
-___________________________________________________________________________
+Each row represents a brand's sales across all years.
 
 **Task 2.2:** What does each column represent?
 
 **Your answer:**
 
-___________________________________________________________________________
+The first column is the brand name, and each remaining column represents a different year's sales figures.
 
 **Task 2.3:** Is this data in tidy format? Why or why not?
+
 
 **Reminder - Tidy data rules:**
 
@@ -152,8 +153,7 @@ ___________________________________________________________________________
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
+No, it is not tidy. Year is spread across multiple columns instead of being its own single column. Each row should represent one brand-year combination, with a separate column for the sales value.
 
 **Hint:** In tidy format, "year" should be a single column, not multiple columns.
 
@@ -176,13 +176,11 @@ knitr::include_graphics("images/sales-2.png")
 ```{r reshape-sales, eval = FALSE}
 # Fill in the blanks
 sales_tidy <- sales %>%
-  pivot_longer(
-    cols = ___,                    # Which columns to pivot (all except brand)
-    names_to = "___",              # Name for the new column with old column names
-    values_to = "___"              # Name for the new column with values
+  pivot_longer (
+    cols =-brand,
+    names_to = "year",
+    values_to = "sales"
   )
-
-sales_tidy
 ```
 
 **Hints:**
@@ -202,13 +200,13 @@ sales_tidy
 nrow(sales_tidy)
 ```
 
-**Your answer:** _____ rows
+**Your answer:**  9 rows
 
 **Why does this number make sense?**
 
 **Your answer:**
 
-Original: _____ brands × _____ years = _____ rows in tidy format
+Original: 3 brands × 3 years = 9 rows in tidy format
 
 ---
 
@@ -219,27 +217,19 @@ Original: _____ brands × _____ years = _____ rows in tidy format
 **Why?** After pivoting, year is stored as character (text), but it should be numeric.
 ```{r convert-year, eval = FALSE}
 sales_tidy <- sales_tidy %>%
-  mutate(year = as.numeric(___))
-
-# Check the type
-class(sales_tidy$year)
+  mutate(year = as.numeric(year))
 ```
 
 **Task 4.2:** Remove any rows with missing sales values.
 ```{r remove-na, eval = FALSE}
 sales_tidy <- sales_tidy %>%
-  filter(!is.na(___))
-
-# Check how many rows remain
-nrow(sales_tidy)
+  filter(!is.na(sales))
 ```
 
 **Task 4.3:** Arrange the data by brand and year.
 ```{r arrange-sales, eval = FALSE}
 sales_tidy <- sales_tidy %>%
-  arrange(___, ___)
-
-sales_tidy
+  arrange(brand, year)
 ```
 
 ---
@@ -278,9 +268,7 @@ Save the tidy data to a CSV file for future use.
 ```{r write-tidy-sales, eval = FALSE}
 # Create data folder if needed
 dir.create("data", showWarnings = FALSE)
-
-# Write the tidy data
-write_csv(___, "data/___.csv")
+write_csv(sales_tidy, "data/sales-tidy.csv")
 ```
 
 **Hint:** Use filename like `"data/sales-tidy.csv"`
