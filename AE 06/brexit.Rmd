@@ -1,16 +1,16 @@
 ---
 title: "AE 06 - Brexit - Telling Different Stories with Data"
-author: "Your Name"
+author: "Jaffer Ali"
 date: "`r Sys.Date()`"
 output: 
-  pdf_document:
-    toc: true
-    latex_engine: xelatex
-    keep_tex: false
   html_document:
     toc: true
     toc_float: true
     code_folding: show
+  pdf_document:
+    toc: true
+    latex_engine: xelatex
+    keep_tex: false
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
@@ -162,7 +162,7 @@ ggplot(brexit, aes(y = opinion, fill = opinion)) +
 ## Exercise 1: Free Scales
 
 Add `scales = "free_x"` as an argument to the `facet_wrap()` function. How does the visualisation change? How is the story this visualisation telling different than the story the original plot tells?
-```{r free-scales, eval=FALSE, fig.width=10, fig.height=4}
+```{r free-scales, eval=TRUE, fig.width=10, fig.height=4}
 # Remember to change eval=FALSE to eval=TRUE!
 
 ggplot(brexit, aes(y = opinion, fill = opinion)) +
@@ -170,7 +170,7 @@ ggplot(brexit, aes(y = opinion, fill = opinion)) +
   facet_wrap(~region,
     nrow = 1, 
     labeller = label_wrap_gen(width = 12),
-    scales = ___  # Add "free_x" here
+    scales = "free_x"  # Add "free_x" here
   ) +
   guides(fill = "none") +
   labs(
@@ -198,24 +198,23 @@ ggplot(brexit, aes(y = opinion, fill = opinion)) +
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
-___________________________________________________________________________
+Each region now has its own x-axis scale, so the bars stretch to fit each panel instead of sharing one common range.
 
 **Task 1.2:** How is the story this visualization tells different from the original plot?
 
 **Your answer:**
 
-**Original plot emphasizes:** ____________________________________________
+**Original plot emphasizes:** 
+ Absolute counts — how many people responded in each region.
 
-**Free scales plot emphasizes:** __________________________________________
+**Free scales plot emphasizes:** 
+The opinion split within each region, regardless of sample size.
 
 **Task 1.3:** Which visualization would be misleading if you wanted to compare the absolute number of responses across regions? Why?
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
+The free scales plot, because each panel has a different x-axis so bar lengths can't be compared across regions.
 
 ---
 
@@ -226,13 +225,11 @@ First, calculate the proportion of wrong, right, and don't know answers in each 
 **How is the story this visualisation telling different than the story the original plot tells?**
 
 **Task 2.1:** Calculate proportions by region and opinion.
-```{r calculate-proportions, eval=FALSE}
-# Remember to change eval=FALSE to eval=TRUE!
-
+```{r calculate-proportions, eval=TRUE}
 brexit_prop <- brexit %>%
-  count(___, ___) %>%           # Count by region and opinion
-  group_by(___) %>%             # Group by region
-  mutate(prop = n / sum(___))   # Calculate proportion within each region
+  count(region, opinion) %>%
+  group_by(region) %>%
+  mutate(prop = n / sum(n))
 
 brexit_prop
 ```
@@ -249,10 +246,10 @@ brexit_prop
 - Each region's proportions sum to 1 (100%)
 
 **Task 2.2:** Plot the proportions with improved axis labeling.
-```{r plot-proportions, eval=FALSE, fig.width=10, fig.height=4}
+```{r plot-proportions, eval=TRUE, fig.width=10, fig.height=4}
 # Remember to change eval=FALSE to eval=TRUE!
 
-ggplot(brexit_prop, aes(y = opinion, x = ___, fill = opinion)) +
+ggplot(brexit_prop, aes(y = opinion, x = prop, fill = opinion)) +
   geom_col() +                  # Use geom_col() for already-calculated values
   facet_wrap(~region, nrow = 1, labeller = label_wrap_gen(width = 12)) +
   guides(fill = "none") +
@@ -260,7 +257,7 @@ ggplot(brexit_prop, aes(y = opinion, x = ___, fill = opinion)) +
     title = "Was Britain right/wrong to vote to leave EU?",
     subtitle = "YouGov Survey Results, 2-3 September 2019",
     caption = "Source: bit.ly/2lCJZVg",
-    x = "___",                  # Label for proportions
+    x = "Proportion",                  # Label for proportions
     y = NULL
   ) +
   scale_fill_manual(values = c(
@@ -268,7 +265,7 @@ ggplot(brexit_prop, aes(y = opinion, x = ___, fill = opinion)) +
     "Right" = "#67a9cf",
     "Don't know" = "gray"
   )) +
-  scale_x_continuous(labels = ___) +  # Format x-axis as percentages
+  scale_x_continuous(labels = percent_format()) +  # Format x-axis as percentages
   theme_minimal()
 ```
 
@@ -283,11 +280,15 @@ ggplot(brexit_prop, aes(y = opinion, x = ___, fill = opinion)) +
 
 **Your answer:**
 
-**Original plot (counts) shows:** _________________________________________
+**Original plot (counts) shows:** 
+How many people in each region gave each response.
 
-**Proportion plot shows:** ________________________________________________
 
-**Which regions have the most "Wrong" responses as a proportion?** _______
+**Proportion plot shows:** 
+
+The share of each opinion within each region, so all regions are fairly comparable regardless of sample size.
+
+**Which regions have the most "Wrong" responses as a proportion?**  London and Scotland — both show "Wrong" bars extending past 50%.
 
 ---
 
@@ -298,25 +299,24 @@ Recreate the same visualisation from the previous exercise, this time dodging th
 **How is the story this visualisation telling different than the story the previous plot tells?**
 
 **Task 3.1:** Create a dodged bar plot.
-```{r dodged-bars, eval=FALSE, fig.width=8, fig.height=5}
+```{r dodged-bars, eval=TRUE, fig.width=8, fig.height=5}
 # Remember to change eval=FALSE to eval=TRUE!
-
-ggplot(brexit_prop, aes(x = ___, y = ___, fill = ___)) +
-  geom_col(position = "___") +  # "dodge" makes bars side-by-side
+ggplot(brexit_prop, aes(x = region, y = prop, fill = opinion)) +
+  geom_col(position = "dodge") +
   labs(
     title = "Was Britain right/wrong to vote to leave EU?",
     subtitle = "YouGov Survey Results, 2-3 September 2019",
     caption = "Source: bit.ly/2lCJZVg",
-    x = "___",                  # Region label
-    y = "___",                  # Proportion label
-    fill = "___"                # Better legend title
+    x = "Region",
+    y = "Proportion",
+    fill = "Opinion"
   ) +
   scale_fill_manual(values = c(
     "Wrong" = "#ef8a62",
     "Right" = "#67a9cf",
     "Don't know" = "gray"
   )) +
-  scale_y_continuous(labels = ___) +  # Format y-axis as percentages
+  scale_y_continuous(labels = percent_format()) +
   theme_minimal()
 ```
 
@@ -335,13 +335,16 @@ ggplot(brexit_prop, aes(x = ___, y = ___, fill = ___)) +
 
 **Your answer:**
 
-**Faceted plot makes it easier to:** ______________________________________
+**Faceted plot makes it easier to:** 
+See the opinion split within each region.
 
-**Dodged plot makes it easier to:** _______________________________________
+**Dodged plot makes it easier to:** 
+Compare the same opinion across all regions side by side.
+
 
 **Task 3.3:** Which region shows the strongest opinion one way or the other (least "Don't know")?
 
-**Your answer:** _____
+**Your answer:** Scotland — it has the smallest "Don't know" bar and the largest "Wrong" bar at 65%.
 
 ---
 
@@ -351,24 +354,19 @@ ggplot(brexit_prop, aes(x = ___, y = ___, fill = ___)) +
 
 **Your answer:**
 
-I would use the _______________ plot because ______________________________
-___________________________________________________________________________
-___________________________________________________________________________
+I would use the proportion faceted plot because it shows Scotland's "Wrong" bar is the largest across all regions at over 50%, making the comparison clear and fair regardless of sample size.
 
 **Task 4.2:** You're writing a report comparing absolute numbers of respondents across regions. Which visualization would be most appropriate? Why?
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
+The original fixed-scale count plot, because all regions share the same x-axis so bar lengths can be directly compared to see which regions had more or fewer respondents.
 
 **Task 4.3:** What's one thing you learned about how visualization choices affect the story you tell?
 
 **Your answer:**
 
-___________________________________________________________________________
-___________________________________________________________________________
-___________________________________________________________________________
+ The same data can tell completely different stories depending on whether you show counts or proportions, and whether you use fixed or free scales. Every visualization choice highlights something while hiding something else.
 
 ---
 
